@@ -12,7 +12,7 @@ import axios from 'axios';
  * 5. Emergency Logging: console.warn at every critical step
  */
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const BACKEND_URL = 'http://localhost:5000';
 const POLL_MS = 60_000;        // poll every 60 s
 const WARN_MIN_MS = 14 * 60_000; // 14 minutes in ms
 const WARN_MAX_MS = 16 * 60_000; // 16 minutes in ms

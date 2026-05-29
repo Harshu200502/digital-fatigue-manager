@@ -1,19 +1,25 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "type": "commonjs",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
   "dependencies": {
     "axios": "^1.13.5",
-    "framer-motion": "^11.15.0",
-    "lucide-react": "^0.468.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.9.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "recharts": "^3.7.0"
   },
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vite.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.4",
     "vite": "^7.3.1"
