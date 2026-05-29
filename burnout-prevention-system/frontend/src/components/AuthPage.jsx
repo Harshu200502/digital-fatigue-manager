@@ -1,167 +1,190 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import { ShieldCheck, LogIn, UserPlus, Mail, Lock, Clock, Smile } from 'lucide-react';
+import { Shield, Key, Mail, User, Phone, ArrowRight } from 'lucide-react';
 
 export default function AuthPage() {
   const { login, register } = useAuth();
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
-  const [isLoading, setIsLoading] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    target_hours: '40',
-    avg_sleep: 'Average',
-  });
+  // Form states
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Target config for registration baseline
+  const [targetHours, setTargetHours] = useState('40');
+  const [sleepQuality, setSleepQuality] = useState('Average');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
+    setIsLoading(true);
 
     try {
       if (authMode === 'login') {
-        await login(formData.username, formData.password);
+        const identifier = username || email;
+        if (!identifier || !password) {
+          setError('Please fill in all fields.');
+          setIsLoading(false);
+          return;
+        }
+        await login(identifier, password);
       } else {
-        await register({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          target_hours: parseInt(formData.target_hours, 10) || 40,
-          avg_sleep: formData.avg_sleep,
-        });
+        if (!username || !email || !password) {
+          setError('Please fill in all required fields.');
+          setIsLoading(false);
+          return;
+        }
+        const formData = {
+          username: username.trim(),
+          email: email.trim().lower(),
+          password,
+          phone_number: phone.trim() || undefined,
+          target_hours: parseInt(targetHours) || 40,
+          avg_sleep: sleepQuality
+        };
+        await register(formData);
       }
+      window.location.reload();
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.error || 'Authentication failed. Please try again.');
+      setError(err.response?.data?.error || 'Authentication failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <section className="v10-card auth-card">
-      <div className="auth-icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--deep-navy)' }}>
-        <ShieldCheck size={48} />
-      </div>
-      <h1 style={{ fontFamily: 'Tenor Sans', fontSize: '2rem', textAlign: 'center', color: 'var(--deep-navy)', marginBottom: '0.25rem' }}>
-        {authMode === 'login' ? 'Welcome Back' : 'Join DigiFatigueBeaters'}
-      </h1>
-      <p className="auth-subtitle" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        {authMode === 'login'
-          ? 'Establish secure connection session'
-          : 'Establish your professional baseline'}
-      </p>
+    <div className="v10-auth-screen">
+      <section className="v10-card auth-card glass">
+        <div className="auth-icon">🛡️</div>
+        <h1>{authMode === 'login' ? 'Guardian Access' : 'Initial Registration'}</h1>
+        <p className="auth-subtitle">
+          {authMode === 'login' 
+            ? 'Initialize Cognitive Shield Session' 
+            : 'Establish Your Professional Baseline'}
+        </p>
 
-      {error && (
-        <div style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', background: '#fee2e2', color: '#b91c1c', fontSize: '0.875rem', marginBottom: '1rem', fontWeight: 500 }}>
-          {error}
-        </div>
-      )}
-
-      <form className="v10-form" onSubmit={handleSubmit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="form-input-wrapper" style={{ position: 'relative' }}>
-            <input
-              name="username"
-              type="text"
-              placeholder="Username / Identity"
-              required
-              autoComplete="off"
-              value={formData.username}
-              onChange={handleChange}
-              style={{ paddingLeft: '2.5rem' }}
-            />
+        {error && (
+          <div style={{
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#f87171',
+            padding: '10px 14px',
+            borderRadius: '8px',
+            marginBottom: '20px',
+            fontSize: '0.85rem',
+            textAlign: 'left'
+          }}>
+            {error}
           </div>
+        )}
 
-          {authMode === 'register' && (
+        <form className="v10-form" onSubmit={handleSubmit}>
+          {authMode === 'login' ? (
             <>
-              <div className="form-input-wrapper" style={{ position: 'relative' }}>
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="Secure Email"
-                  required
-                  autoComplete="off"
-                  value={formData.email}
-                  onChange={handleChange}
-                  style={{ paddingLeft: '2.5rem' }}
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type="text" 
+                  placeholder="Username or Email" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required 
+                  autoComplete="username" 
                 />
               </div>
-
-              <div className="profile-setup-label" style={{ fontWeight: 600, color: 'var(--deep-navy)', fontSize: '0.85rem', marginTop: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Professional Profile Setup
-              </div>
-
-              <div className="form-input-wrapper" style={{ position: 'relative' }}>
-                <input
-                  name="target_hours"
-                  type="number"
-                  placeholder="Target Weekly Hours (e.g. 40)"
-                  required
-                  min="1"
-                  max="168"
-                  value={formData.target_hours}
-                  onChange={handleChange}
-                  style={{ paddingLeft: '2.5rem' }}
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type="password" 
+                  placeholder="Passphrase" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                  autoComplete="current-password" 
                 />
               </div>
+            </>
+          ) : (
+            <>
+              <input 
+                type="text" 
+                placeholder="Username / Identity" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required 
+                autoComplete="username" 
+              />
+              <input 
+                type="email" 
+                placeholder="Secure Email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+                autoComplete="email" 
+              />
+              <input 
+                type="tel" 
+                placeholder="Phone Number (Optional)" 
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                autoComplete="tel" 
+              />
+              
+              <div className="profile-setup-label">Baseline Settings</div>
+              <input 
+                type="number" 
+                placeholder="Target Weekly Hours (e.g. 40)" 
+                value={targetHours}
+                onChange={(e) => setTargetHours(e.target.value)}
+                required 
+              />
+              <select 
+                value={sleepQuality}
+                onChange={(e) => setSleepQuality(e.target.value)}
+                className="v10-select" 
+                required
+              >
+                <option value="Good">Sleep Quality: Good</option>
+                <option value="Average">Sleep Quality: Average</option>
+                <option value="Poor">Sleep Quality: Poor</option>
+              </select>
 
-              <div className="form-input-wrapper" style={{ position: 'relative' }}>
-                <select
-                  name="avg_sleep"
-                  className="v10-select"
-                  required
-                  value={formData.avg_sleep}
-                  onChange={handleChange}
-                  style={{ paddingLeft: '2.5rem', width: '100%' }}
-                >
-                  <option value="Good">Sleep Quality: Good</option>
-                  <option value="Average">Sleep Quality: Average</option>
-                  <option value="Poor">Sleep Quality: Poor</option>
-                </select>
-              </div>
+              <input 
+                type="password" 
+                placeholder="Passphrase (Min 8 chars, 1 number, 1 special)" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required 
+                autoComplete="new-password" 
+              />
             </>
           )}
 
-          <div className="form-input-wrapper" style={{ position: 'relative' }}>
-            <input
-              name="password"
-              type="password"
-              placeholder="Passphrase"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              style={{ paddingLeft: '2.5rem' }}
-            />
-          </div>
-
-          <button type="submit" className="v10-btn yellow-btn" disabled={isLoading} style={{ marginTop: '0.5rem' }}>
+          <button type="submit" className="v10-btn yellow-btn" disabled={isLoading}>
             {isLoading ? (
               <span className="btn-spinner"></span>
-            ) : authMode === 'login' ? (
-              'Initialize System Session'
             ) : (
-              'Commit Configuration'
+              <>
+                {authMode === 'login' ? 'Initialize System Session' : 'Commit Configuration'}
+                <ArrowRight size={16} style={{ marginLeft: '8px' }} />
+              </>
             )}
           </button>
-        </div>
-      </form>
+        </form>
 
-      <button
-        className="back-btn-ghost mt-4"
-        style={{ marginTop: '1.5rem', width: '100%', background: 'none', border: 'none', color: 'var(--deep-navy)', cursor: 'pointer', fontWeight: 500 }}
-        onClick={() => setAuthMode((m) => (m === 'login' ? 'register' : 'login'))}
-      >
-        {authMode === 'login' ? 'No access? Register here' : 'Return to secure login'}
-      </button>
-    </section>
+        <button 
+          className="back-btn-ghost mt-4"
+          onClick={() => {
+            setError('');
+            setAuthMode(authMode === 'login' ? 'register' : 'login');
+          }}
+          type="button"
+        >
+          {authMode === 'login' ? 'Establish New Profile baseline' : 'Return to Secure Session Sign-in'}
+        </button>
+      </section>
+    </div>
   );
 }
