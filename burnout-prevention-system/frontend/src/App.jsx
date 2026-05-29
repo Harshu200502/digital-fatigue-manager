@@ -16,7 +16,7 @@ import { useBreakNotifications } from './hooks/useBreakNotifications';
  * PROTOCOL 17.0: JWT AUTH + MULTI-TEMPORAL ALIGNMENT
  */
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const headers = { 'Content-Type': 'application/json' };
 
 const formatDate = (d) => d.toISOString().split('T')[0];
@@ -165,7 +165,7 @@ function AppContent() {
 
     const swapBreak = async (taskId) => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/swap-break', { headers });
+            const { data } = await axios.get(`${BACKEND_URL}/api/swap-break`, { headers });
             if (data.new_break_title) {
                 setRoutine(prev => prev.map(t => t.id === taskId ? { ...t, title: data.new_break_title } : t));
             }
@@ -317,7 +317,7 @@ function AppContent() {
                     }}
                     onSwap={async () => {
                         try {
-                            const { data } = await axios.get('http://localhost:5000/api/swap-break', authHeader());
+                            const { data } = await axios.get(`${BACKEND_URL}/api/swap-break`, { headers });
                             if (data.new_break_title) {
                                 // Find generic break ID format
                                 const idMap = { 'Bhramari': 'bhramari', 'Box Breathing': 'boxBreathing', 'Physiological Sigh': 'physioSigh', 'Stretch': 'stretchTwist', 'Tendon': 'tendonGlide', 'Wall Angels': 'wallAngels' };
