@@ -19,10 +19,7 @@
 }
 
 body {
-  background-color: var(--bg-pale);
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(255, 220, 220, 0.5) 0px, transparent 60%),
-    radial-gradient(at 100% 100%, rgba(181, 225, 139, 0.4) 0px, transparent 60%);
+  background: url('./bg-presentation.png') no-repeat center center/cover;
   background-attachment: fixed;
   color: var(--deep-navy);
   font-family: 'Montserrat', sans-serif;
@@ -61,7 +58,7 @@ button {
 
 /* AURA GRADIENT */
 .aura-container {
-  background: linear-gradient(135deg, #a5def4 0%, #ffefde 30%, #c6ebc7 70%, #ffdcdc 100%);
+  background: linear-gradient(135deg, rgba(165, 222, 244, 0.75) 0%, rgba(255, 239, 222, 0.75) 30%, rgba(198, 235, 199, 0.75) 70%, rgba(255, 220, 220, 0.75) 100%);
   flex: 1;
   display: flex;
   flex-direction: column;

@@ -366,7 +366,7 @@ function AppContent() {
                 </nav>
             )}
 
-            <main className={`wellness-main ${(view === 'analysis' || view === 'routine') ? 'w-full max-w-[1400px] mx-auto px-8 md:px-12 py-8' : ''}`} style={(view === 'home' || view === 'login') ? {background: `url(${bgImage}) no-repeat center center/cover`, backgroundAttachment: 'fixed', minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column'} : {}}>
+            <main className={`wellness-main ${(view === 'analysis' || view === 'routine') ? 'w-full max-w-[1400px] mx-auto px-8 md:px-12 py-8' : ''}`} style={{ minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
                 {view === 'login' && (
                     <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                         <AuthPage />
