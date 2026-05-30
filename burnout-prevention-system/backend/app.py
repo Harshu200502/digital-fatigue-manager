@@ -33,10 +33,17 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # CORS
+    import os
+    FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+    FRONTEND_URL_2 = os.environ.get("FRONTEND_URL_2", "http://localhost:5174")
+
     CORS(app, supports_credentials=True, origins=[
-        "http://localhost:5173", "http://127.0.0.1:5173",
-        "http://localhost:5174", "http://127.0.0.1:5174",
-        "http://localhost:5175", "http://127.0.0.1:5175"
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://digital-fatigue-manager.vercel.app",
+        "https://digital-fatigue-manager-git-main-harshitha-m-s-proj.vercel.app",
+        FRONTEND_URL,
+        FRONTEND_URL_2,
     ])
 
     # Extensions
