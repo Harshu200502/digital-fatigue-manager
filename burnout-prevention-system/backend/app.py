@@ -33,7 +33,6 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # CORS
-    import os
     FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
     FRONTEND_URL_2 = os.environ.get("FRONTEND_URL_2", "http://localhost:5174")
 
